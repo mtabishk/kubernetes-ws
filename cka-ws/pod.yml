@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  labels:
+    app: webserver
+spec:
+  containers:
+    - name: web
+      image: vimal13/apache-webserver-php
+      ports:
+        - containerPort: 80
