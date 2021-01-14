@@ -7,6 +7,10 @@ metadata:
 spec:
   containers:
     - name: web
-      image: mtabishk/apache2-php
+      image: mtabishk/webserver-apache-php
       ports:
         - containerPort: 80
+      resources:
+        limits:
+            cpu: 1
+            memory: 1Gi
