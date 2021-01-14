@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: web
-      image: vimal13/apache-webserver-php
+      image: mtabishk/apache2-php
       ports:
         - containerPort: 80
