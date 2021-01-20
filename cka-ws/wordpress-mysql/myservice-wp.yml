@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mywp-service
+spec:
+  type: NodePort
+  selector:
+    app: mywordpress
+  ports:
+  - name: http
+    targetPort: 80
+    port: 80
+    nodePort: 32000
+  
