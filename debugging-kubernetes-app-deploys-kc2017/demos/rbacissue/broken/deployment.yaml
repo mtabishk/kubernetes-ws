@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:    
+    release: kubecon2017
+    app: rbacissue
+    component: frontend
+  name: rbacissue-kubecon2017
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rbacissue
+      release: kubecon2017
+      component: frontend
+  template:
+    metadata:
+      labels:        
+        release: kubecon2017
+        app: rbacissue
+        component: frontend
+    spec:
+      containers:
+        - name: rbacissue-frontend
+          image: "weaveworks/scope:1.6.6"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - "--no-probe"
+          ports:
+            - name: http
+              containerPort: 4040
+              protocol: TCP

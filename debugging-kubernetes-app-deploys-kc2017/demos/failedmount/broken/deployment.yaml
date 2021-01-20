@@ -1,0 +1,39 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:    
+    release: kubecon2017
+    app: failedmount
+    component: frontend
+  name: failedmount-kubecon2017
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: failedmount
+      release: kubecon2017
+      component: frontend
+  template:
+    metadata:
+      labels:        
+        release: kubecon2017
+        app: failedmount
+        component: frontend
+    spec:
+      containers:
+        - name: failedmount-container
+          image: "busybox"
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "echo -e 'Hello Kubecon 2017!'\"\n\"; ls /tmp/kubecon2017; sleep 3600"
+          volumeMounts:
+          - mountPath: /tmp/kubecon2017
+            name: kubecon2017
+      volumes:
+      - name: kubecon2017
+        hostPath:
+          path: /tmo
+          type: Directory

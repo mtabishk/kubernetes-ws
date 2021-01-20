@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:    
+    release: kubecon2017
+    app: discoveryfailure
+    component: agent
+  name: kubecon2017-discoveryfailure
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubecon2017-discoveryfailure
+subjects:
+  - kind: ServiceAccount
+    name: kubecon2017-discoveryfailure-agent
+    namespace: default

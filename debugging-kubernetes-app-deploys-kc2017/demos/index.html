@@ -1,0 +1,101 @@
+<title>Demos used for "CrashLoopBackoff, Pending, FailedMount and Friends" talk at KubeCon 2017</title>
+<style>
+a { color: #e7ad52; text-decoration: none; -webkit-transition: color .15s ease; -moz-transition: color .15s ease; transition: color .15s ease; };
+a:hover { color: #f3d7ac; text-shadow: none; border: none; };
+</style>
+<body style="font-family: Open Sans, sans-serif; font-size: larger; line-height: 1.3; color: #eee; background: #243354" >
+<h2 style="text-align: center; font-weight: bold">Demos used for "CrashLoopBackoff, Pending, FailedMount and Friends" talk at KubeCon 2017</h2>
+<p>
+You can download a <a href="https://afontofuseless.info/debugging-kubernetes-app-deploys-kc2017/debugging-kubernetes-app-deploys-kc2017-demos.zip">ZIP file</a> 
+of all the demos for easy local use; otherwise you will have to download 
+all the files individually and recreate the directory structure.  The ZIP 
+file link should always point to the server copy, while other links in 
+this document are relative so they should work if browsing this index 
+locally.
+<p>
+(Note, these are not <em>exactly</em> the same as the files used in the 
+KubeCon 2017 demo -- I cleaned them up a bit for greater clarity.)
+<p>
+Each of these demos has two directories: "broken" which you can use to 
+deploy the initial broken configuration, and "fixed" which when applied 
+should result in a working deployment.  The install is as easy as:
+<p>
+<code style="display: inline-block; background: #333333; color: #dcdcdc; padding: 8">kubectl apply -f [demo directory, e.g. crashloopbackoff]/broken</code>
+<p>
+You can then investigate the failure with various kubectl commands.  To 
+fix it:
+<p>
+<code style="display: inline-block; background: #333333; color: #dcdcdc; padding: 8">kubectl apply -f [demo directory]/fixed</code>
+<p>
+To clean up:
+<p>
+<code style="display: inline-block; background: #333333; color: #dcdcdc; padding: 8">kubectl delete -f [demo directory]/fixed -f [demo directory]/broken</code>
+<p>
+You can also (and I encourage you to) try to fix the broken components 
+yourself, then compare to my fixed versions.
+<p>
+Prerequisites: a working Kubernetes cluster in a relatively untouched 
+state (with RBAC enabled if you want to try the RBAC demo) that you 
+aren't doing anything important or sensitive on (some of these demos 
+spawn busybox containers, display data gathered from the API server, 
+etc. -- don't do these demos in production!)
+<p>
+Things that may interfere with the demos functioning as desired: 
+<ul>
+<li> NetworkPolicy rules
+<li> RBAC rules
+<li> Tight resource restrictions
+</ul>
+The files from which most of these demos are constructed are in the 
+<a href="./base">base</a> directory.
+<p>
+Demos:
+<p>
+<ul>
+<li> <a href="./crashloopbackoff">CrashLoopBackoff</a>: the broken 
+deployment has a busybox container that fails to start and just crashes.  
+The fixed deployment has a container that sleeps for 3600 seconds.  
+<li> <a href="./discoveryfailure">Discovery failure</a>: the broken 
+deployment has a Weave Scope agent DaemonSet that fails to report to the 
+frontend because it is trying to contact it on the wrong service hostname.  
+You can port-forward a browser connection to observe the effect on the 
+frontend (when the DaemonSet is broken, it reports nothing):
+<p>
+<code style="display: inline-block; background: #333333; color: #dcdcdc; padding: 8">kubectl port-forward $(kubectl get po -o jsonpath={.items..metadata.name} -l app=discoveryfailure,component=frontend) 4040</code>
+<p>
+After starting the port forward, browse to http://localhost:4040/ and you 
+should see the Weave Scope UI.
+<li> <a href="./failedmount">FailedMount</a>: the broken deployment tries 
+to mount a host directory that does not exist.
+<li> <a href="./imagepullerror">ImagePullError</a>: the broken deployment 
+is trying to pull an image tag that doesn't exist.
+<li> <a href="./pending">Pending Pod</a>: the broken deployment tries to 
+create a pod with a memory request that most hosts cannot provide.  (If 
+your host has 80 TB of spare memory, this "broken" deployment may succeed 
+for you!)  The fixed deployment does not request a specific amount of 
+memory.
+<li> <a href="./rbacissue">RBAC Issue</a>: the broken deployment's 
+DaemonSet is not actually broken, but it cannot gather info on the cluster 
+through the API server because its ServiceAccount has no permissions.  The 
+fixed deployment simply adds the necessary ClusterRole and 
+ClusterRoleBinding.  You can observe the effects by port-forwarding to the 
+Scope UI: 
+<p>
+<code style="display: inline-block; background: #333333; color: #dcdcdc; padding: 8">kubectl port-forward $(kubectl get po -o jsonpath={.items..metadata.name} -l app=rbacissue,component=frontend) 4040</code>
+<p>
+Note that in the "broken" status you will see items gathered from the 
+hosts directly, but not things that require access to the API server like 
+pod and service listings (until you fix the RBAC issue).  Once you fix 
+RBAC, the agent pods may still be in a backed-off status (they will not 
+restart since you did not change the DaemonSet itself); either wait, or 
+simply delete them and let them be recreated.
+</ul>
+<p>
+Happy debugging, and if you have questions about these demos, feel free to 
+contact me on Kubernetes Slack 
+(<a href="https://kubernetes.slack.com/">@kensey</a>), Twitter 
+(<a href="https://twitter.com/caffeinepresent/">@caffeinepresent</a>), or 
+through e-mail 
+(<a href="mailto:kc2017@orion-com.com">kc2017@orion-com.com</a>).
+<p>
+Joe Thompson

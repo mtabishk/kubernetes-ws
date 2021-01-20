@@ -1,0 +1,35 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:    
+    release: kubecon2017
+    app: pending
+    component: frontend
+  name: pending-kubecon2017
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pending
+      release: kubecon2017
+      component: frontend
+  template:
+    metadata:
+      labels:        
+        release: kubecon2017
+        app: pending
+        component: frontend
+    spec:
+      containers:
+        - name: pending-frontend
+          image: "weaveworks/scope:1.6.5"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - "--no-probe"
+          ports:
+            - name: http
+              containerPort: 4040
+              protocol: TCP
+          resources:
+            requests:
+              memory: 80T

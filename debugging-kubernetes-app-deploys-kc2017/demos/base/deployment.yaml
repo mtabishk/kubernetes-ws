@@ -1,0 +1,52 @@
+---
+# Source: weave-scope/charts/weave-scope-frontend/templates/deployment.yaml
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:    
+    chart: weave-scope-frontend-0.9.1
+    heritage: Tiller
+    release: kubecon2017
+    app: weave-scope
+    component: frontend
+  name: weave-scope-frontend-kubecon2017
+  annotations:    
+    cloud.weave.works/launcher-info: |-
+      {
+        "server-version": "master-4fe8efe",
+        "original-request": {
+          "url": "/k8s/v1.7/scope.yaml"
+        },
+        "email-address": "support@weave.works",
+        "source-app": "weave-scope",
+        "weave-cloud-component": "scope"
+      }
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weave-scope
+      release: kubecon2017
+      component: frontend
+  template:
+    metadata:
+      labels:        
+        chart: weave-scope-frontend-0.9.1
+        heritage: Tiller
+        release: kubecon2017
+        app: weave-scope
+        component: frontend
+    spec:
+      containers:
+        - name: weave-scope-frontend
+          image: "weaveworks/scope:1.6.5"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - "--no-probe"
+          ports:
+            - name: http
+              containerPort: 4040
+              protocol: TCP
+          resources:
+            null
+            

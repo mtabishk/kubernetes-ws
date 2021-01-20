@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:    
+    release: kubecon2017
+    app: crashloopbackoff
+    component: frontend
+  name: crashloopbackoff-kubecon2017
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crashloopbackoff
+      release: kubecon2017
+      component: frontend
+  template:
+    metadata:
+      labels:        
+        release: kubecon2017
+        app: weave-scope
+        component: frontend
+    spec:
+      containers:
+        - name: crash-container
+          image: "busybox"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - "sh"
+            - "-c"
+            - "echo Attempting to sleep; sleep 3600-"

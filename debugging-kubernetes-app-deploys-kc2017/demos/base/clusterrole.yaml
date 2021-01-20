@@ -1,0 +1,35 @@
+---
+# Source: weave-scope/charts/weave-scope-agent/templates/clusterrole.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  labels:    
+    chart: weave-scope-agent-0.9.1
+    heritage: Tiller
+    release: kubecon2017
+    app: weave-scope
+    component: agent
+  name: kubecon2017-weave-scope 
+  annotations:    
+    cloud.weave.works/launcher-info: |-
+      {
+        "server-version": "master-4fe8efe",
+        "original-request": {
+          "url": "/k8s/v1.7/scope.yaml"
+        },
+        "email-address": "support@weave.works",
+        "source-app": "weave-scope",
+        "weave-cloud-component": "scope"
+      }
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - '*'
+  - nonResourceURLs:
+      - '*'
+    verbs:
+      - '*'

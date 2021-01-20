@@ -1,0 +1,32 @@
+---
+# Source: weave-scope/charts/weave-scope-agent/templates/clusterrolebinding.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:    
+    chart: weave-scope-agent-0.9.1
+    heritage: Tiller
+    release: kubecon2017
+    app: weave-scope
+    component: agent
+  name: kubecon2017-weave-scope
+  annotations:    
+    cloud.weave.works/launcher-info: |-
+      {
+        "server-version": "master-4fe8efe",
+        "original-request": {
+          "url": "/k8s/v1.7/scope.yaml"
+        },
+        "email-address": "support@weave.works",
+        "source-app": "weave-scope",
+        "weave-cloud-component": "scope"
+      }
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubecon2017-weave-scope
+subjects:
+  - kind: ServiceAccount
+    name: kubecon2017-weave-scope
+    namespace: default

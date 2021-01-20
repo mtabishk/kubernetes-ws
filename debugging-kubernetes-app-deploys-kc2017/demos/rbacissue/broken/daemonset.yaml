@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:    
+    release: kubecon2017
+    app: rbacissue
+    component: agent
+  name: rbacissue-kubecon2017
+spec:
+  selector:
+    matchLabels:
+      app: rbacissue
+      release: kubecon2017
+      component: agent
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:        
+        release: kubecon2017
+        app: rbacissue
+        component: agent
+    spec:
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+      containers:
+        - name: rbacissue-agent
+          image: "weaveworks/scope:1.6.6"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - '--no-app'
+            - '--probe.docker.bridge=docker0'
+            - '--probe.docker=true'
+            - '--probe.kubernetes=true'
+            - rbacissue-kubecon2017.default.svc:80
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
+            - name: scope-plugins
+              mountPath: /var/run/scope/plugins
+            - name: sys-kernel-debug
+              mountPath: /sys/kernel/debug
+      volumes:
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+        - name: scope-plugins
+          hostPath:
+            path: /var/run/scope/plugins
+        - name: sys-kernel-debug
+          hostPath:
+            path: /sys/kernel/debug
+      hostPID: true
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      serviceAccountName: kubecon2017-rbacissue-agent

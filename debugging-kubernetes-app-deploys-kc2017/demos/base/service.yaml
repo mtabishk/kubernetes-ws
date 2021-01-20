@@ -1,0 +1,34 @@
+---
+# Source: weave-scope/charts/weave-scope-frontend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:    
+    chart: weave-scope-frontend-0.9.1
+    heritage: Tiller
+    release: kubecon2017
+    app: weave-scope
+    component: frontend
+  name: kubecon2017
+  annotations:    
+    cloud.weave.works/launcher-info: |-
+      {
+        "server-version": "master-4fe8efe",
+        "original-request": {
+          "url": "/k8s/v1.7/scope.yaml"
+        },
+        "email-address": "support@weave.works",
+        "source-app": "weave-scope",
+        "weave-cloud-component": "scope"
+      }
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app: weave-scope
+    release: kubecon2017
+    component: frontend
+  type: ClusterIP
