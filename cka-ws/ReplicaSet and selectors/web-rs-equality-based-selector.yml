@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: myweb-rs-sbs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata: 
+      name: myweb-pod
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: myweb-con
+        image: mtabishk/apache2-php
+  
