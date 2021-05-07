@@ -3,12 +3,10 @@ kind: PersistentVolume
 metadata:
   name: mypv
 spec:
+  storageClassName: ""
   capacity:
     storage: 10Gi
-  volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
-  hostPath:
-    path: /mydata
+  nfs:
+    path: "/mydata"

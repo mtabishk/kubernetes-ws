@@ -4,9 +4,8 @@ metadata:
   name: mypvc
 spec:
   storageClassName: ""
+  accessModes:
+  - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
+      storage: 10Gi
